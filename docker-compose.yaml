@@ -6,13 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/ProjectNext-intervenants
-      - /node_modules
+      - .:/projet-dispos-intervenants
+      - /projet-dispos-intervenants/node_modules
     ports:
       - "3000:3000"
     command: sh -c "npm run dev"
-    depends_on:
-      - database
 
   database:
     image: postgres:13

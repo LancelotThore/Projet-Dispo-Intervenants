@@ -1,20 +1,15 @@
-# Utiliser l'image Node.js officielle
-FROM node:18
+# Étapes d'installation des dépendances
+FROM node:18-alpine
+WORKDIR /Projet-Dispos-Intervenants
 
-# Créer un répertoire de travail
-WORKDIR /ProjectNext-intervenants
+COPY package*.json ./
+RUN npm install --legacy-peer-deps --force
 
-# Copier le reste des fichiers de l'application
+# Copier le dossier src
 COPY . .
 
-# Installer les dépendances
-RUN npm install
-
-# Installer Next.js globalement
-RUN npm install -g next
-
-# Exposer le port sur lequel Next.js va écouter
+# Exposer le port utilisé par Next.js
 EXPOSE 3000
 
-# Commande pour démarrer l'application
+# Démarrer le serveur en mode développement pour activer le hot reload
 CMD ["npm", "run", "dev"]
