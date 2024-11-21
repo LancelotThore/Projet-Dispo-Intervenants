@@ -1,6 +1,6 @@
 # Étapes d'installation des dépendances
 FROM node:18-alpine
-WORKDIR /Projet-Dispos-Intervenants
+WORKDIR /Projet-Dispo-Intervenants
 
 COPY package*.json ./
 RUN npm install --legacy-peer-deps --force

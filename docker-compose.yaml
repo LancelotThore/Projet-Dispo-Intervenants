@@ -6,15 +6,14 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/projet-dispos-intervenants
-      - /projet-dispos-intervenants/node_modules
+      - .:/Projet-Dispo-Intervenants
+      - /Projet-Dispo-Intervenants/node_modules
     ports:
       - "3000:3000"
     command: sh -c "npm run dev"
 
   database:
     image: postgres:13
-    platform: linux/amd64
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: user

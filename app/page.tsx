@@ -3,17 +3,16 @@ import Link from 'next/link';
 
 export default function Page() {
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-          <p className={`antialiased text-xl text-gray-800 md:text-3xl md:leading-normal`}>
-            <strong>Gestionnaires emploi du temps</strong>
-          </p>
+    <main className="flex min-h-screen flex-col p-8 bg-gray-100">
+      <div className="mt-6 flex grow flex-col gap-6 md:flex-row">
+        <div className="flex flex-col justify-center gap-8 rounded-lg bg-white shadow-lg px-8 py-12 md:w-2/5 md:px-24">
+          <div className="antialiased text-2xl text-gray-900 md:text-4xl md:leading-relaxed">
+            <p>418 dans le créateur de disponibilité</p>
+          </div>
           <Link
             href="/login"
-            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-          >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
+            className="flex items-center gap-6 self-start rounded-lg bg-red-600 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-red-500 md:text-lg">
+            <span>Log in</span> <ArrowRightIcon className="w-6 md:w-7" />
           </Link>
         </div>
       </div>
