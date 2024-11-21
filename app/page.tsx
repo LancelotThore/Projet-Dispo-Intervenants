@@ -7,7 +7,7 @@ export default function Page() {
       <div className="mt-6 flex grow flex-col gap-6 md:flex-row">
         <div className="flex flex-col justify-center gap-8 rounded-lg bg-white shadow-lg px-8 py-12 md:w-2/5 md:px-24">
           <div className="antialiased text-2xl text-gray-900 md:text-4xl md:leading-relaxed">
-            <p>418 dans le créateur de disponibilité</p>
+            <p>Bienvenue dans le créateur de disponibilité</p>
           </div>
           <Link
             href="/login"
