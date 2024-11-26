@@ -12,8 +12,8 @@ services:
       - POSTGRES_DB=app_db
       - POSTGRES_PASSWORD=app_db__user_password
     volumes:
-      - .:/Projet-Dispo-Intervenants
-      - /Projet-Dispo-Intervenants/node_modules
+      - .:/projet-dispo-intervenants
+      - /projet-dispo-intervenants/node_modules
     networks:
       - app_network
     command: sh -c "npm run dev"
