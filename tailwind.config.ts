@@ -13,6 +13,10 @@ export default {
         foreground: "hsl(var(--foreground)/<alpha-value>)",
         redunilim: "hsl(var(--redunilim)/<alpha-value>)",
       },
+      opacity: {
+        7: '0.07',
+        8: '0.08',
+      },
     },
   },
   plugins: [],

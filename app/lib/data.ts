@@ -1,14 +1,15 @@
-import { db } from '@/app/lib/db';
-import { Intervenants } from '@/app/lib/definitions';
+import db from '@/app/lib/db';
 
-export async function fetchIntervenants(): Promise<Intervenants[]> {
-    try {
-        const client = await db.connect();
-        const result = await client.query('SELECT * FROM "intervenants"');
-        client.release();
-        return result.rows as Intervenants[];
-    } catch (e: any) {
-        console.error("Error fetching intervenants", e);
-        throw e;
-    }
+// Fonction pour récupérer les intervenants
+export async function getIntervenants() {
+  const client = await db.connect();
+  try {
+    const result = await client.query('SELECT * FROM intervenants');
+    return result.rows;
+  } catch (err) {
+    console.error('Erreur lors de la récupération des intervenants', err);
+    throw err;
+  } finally {
+    client.release();
+  }
 }

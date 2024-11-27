@@ -1,15 +1,20 @@
-# Étapes d'installation des dépendances
-FROM node:18-alpine
-WORKDIR /projet-dispo-intervenants
+# Utilisez une image Node.js comme base
+FROM node:18
 
+# Définissez le répertoire de travail
+WORKDIR /app
+
+# Copiez les fichiers package.json et package-lock.json
 COPY package*.json ./
-RUN npm install
 
-# Copier le dossier src
+# Installez les dépendances
+
+
+# Copiez le reste des fichiers du projet
 COPY . .
 
-# Exposer le port utilisé par Next.js
+# Exposez le port sur lequel l'application écoute
 EXPOSE 3000
 
-# Démarrer le serveur en mode développement pour activer le hot reload
+# Commande pour démarrer l'application
 CMD ["npm", "run", "dev"]
