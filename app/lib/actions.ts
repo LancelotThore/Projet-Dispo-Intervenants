@@ -127,12 +127,12 @@ export async function updateIntervenants(
 export async function deleteIntervenants(id: string) {
   const client = await db.connect();
   try {
-    await client.query('DELETE FROM invoices WHERE id = $1', [id]);
-    revalidatePath('/dashboard/invoices');
-    return { message: 'Deleted Invoice.' };
+    await client.query('DELETE FROM intervenants WHERE id = $1', [id]);
+    revalidatePath('/dashboard/');
+    return { message: 'Deleted intervenant.' };
   } catch (err) {
-    console.error('Database Error: Failed to Delete Invoice.', err);
-    return { message: 'Database Error: Failed to Delete Invoice.' };
+    console.error('Database Error: Failed to Delete intervenant.', err);
+    return { message: 'Database Error: Failed to Delete intervenant.' };
   } finally {
     client.release();
   }
