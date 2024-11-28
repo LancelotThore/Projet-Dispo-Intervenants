@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { SearchIcon } from '@/app/icons';
+import { SearchIcon } from '@/app/ui/icons';
 
 
 export default function Search({ placeholder }: { placeholder: string }) {
