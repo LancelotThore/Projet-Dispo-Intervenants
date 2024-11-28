@@ -48,6 +48,9 @@ export default function Form() {
               <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+          {state.errors?.email && (
+            <p className="mt-2 text-sm text-red-600">{state.errors.email[0]}</p>
+          )}
         </div>
 
         {/* Intervenant Firstname */}
@@ -90,12 +93,11 @@ export default function Form() {
               <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
-        </div>
-
+        </div> {/* Intervenant Lastname */}
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/intervenants"
+          href="/dashboard"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
