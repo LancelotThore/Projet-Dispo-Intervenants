@@ -65,7 +65,7 @@ export async function createIntervenants(prevState: State, formData: FormData) {
   // Generate additional fields
   const key = generateKey(); // Implement this function to generate a unique key
   const creationdate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
-  const enddate = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0]; // One year from now
+  const enddate = new Date(new Date().setMonth(new Date().getMonth() + 2)).toISOString().split('T')[0]; // Deux mois à partir de maintenant
   const availability = {}; // Default empty JSON object
 
   const client = await db.connect();
@@ -92,8 +92,8 @@ export async function createIntervenants(prevState: State, formData: FormData) {
     client.release();
   }
 
-  revalidatePath('/dashboard/intervenants');
-  redirect('/dashboard/intervenants');
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
 }
 
 export async function updateIntervenants(

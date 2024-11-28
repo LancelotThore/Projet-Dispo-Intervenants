@@ -40,6 +40,7 @@ export default function Form() {
                 id="email"
                 name="email"
                 type="email"
+                value={formData.email}
                 placeholder="Enter your email"
                 onChange={handleChange}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -64,6 +65,7 @@ export default function Form() {
                 id="firstname"
                 name="firstname"
                 type="text"
+                value={formData.firstname}
                 placeholder="Enter your firstname"
                 onChange={handleChange}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -85,6 +87,7 @@ export default function Form() {
                 id="lastname"
                 name="lastname"
                 type="text"
+                value={formData.lastname}
                 placeholder="Enter your lastname"
                 onChange={handleChange}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
