@@ -6,6 +6,9 @@ import Table from '@/app/ui/intervenants/table';
 import { IntervenantsTableSkeleton } from '@/app/ui/skeletons';
 import Search from '@/app/ui/search';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { UserPlusIcon } from '@/app/ui/icons';
+import { CreateIntervenants } from '@/app/ui/intervenants/buttons';
 
 export default function Gestion() {
     const [totalPages, setTotalPages] = useState(1);
@@ -29,6 +32,7 @@ export default function Gestion() {
             <h1>Gestion des Intervenants :</h1>
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
             <Search placeholder="Rechercher des intervenants" />
+            <CreateIntervenants />
             </div>
             <Suspense fallback={<IntervenantsTableSkeleton />}>
                 <Table query={query} currentPage={currentPage} />
