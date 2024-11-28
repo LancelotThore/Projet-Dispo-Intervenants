@@ -2,19 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import { formatDateToLocal } from '@/app/lib/utils';
+import { ExclamationCircleIcon, CheckCircleIcon } from "@/app/icons";
 
-export default function IntervenantsTable() {
+
+export default function Table({ query, currentPage }: { query: string, currentPage: number }) {
     const [intervenants, setIntervenants] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch('/api/intervenants/get');
+            const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}`);
             const result = await response.json();
             setIntervenants(result);
         };
 
         fetchData();
-    }, []);
+    }, [query, currentPage]);
 
     if (intervenants.length === 0) {
         return <p>Loading...</p>;
@@ -69,7 +71,7 @@ export default function IntervenantsTable() {
                                     End Date
                                 </th>
                                 <th scope="col" className="px-3 py-5 font-medium">
-                                    Availability
+                                    
                                 </th>
                             </tr>
                         </thead>
@@ -98,7 +100,7 @@ export default function IntervenantsTable() {
                                         {formatDateToLocal(intervenant.enddate)}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3">
-                                        {JSON.stringify(intervenant.availability)}
+                                        {intervenant.creationdate < intervenant.enddate ? <CheckCircleIcon className="h-6 w-6 text-green-500" /> : <ExclamationCircleIcon className="h-6 w-6 text-red-500" />}
                                     </td>
                                 </tr>
                             ))}
