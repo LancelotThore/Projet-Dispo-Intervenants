@@ -1,9 +1,9 @@
-import { getIntervenants } from '@/app/lib/data';
+import { fetchIntervenants } from '@/app/lib/data';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const intervenants = await getIntervenants();
+    const intervenants = await fetchIntervenants();
     return NextResponse.json(intervenants);
   } catch (err) {
     console.log(err);

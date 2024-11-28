@@ -1,7 +1,7 @@
 import db from '@/app/lib/db';
 
 // Fonction pour récupérer les intervenants
-export async function getIntervenants() {
+export async function fetchIntervenants() {
   const client = await db.connect();
   try {
     const result = await client.query('SELECT * FROM intervenants');
