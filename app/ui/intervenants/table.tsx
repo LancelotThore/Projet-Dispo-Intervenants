@@ -7,6 +7,7 @@ import { CheckCircleIcon, ExclamationCircleIcon } from '@/app/ui/icons';
 
 export default function Table({ query, currentPage }: { query: string, currentPage: number }) {
     const [intervenants, setIntervenants] = useState([]);
+    const today = new Date();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,7 +38,7 @@ export default function Table({ query, currentPage }: { query: string, currentPa
                                         <p>{intervenant.firstname} {intervenant.lastname}</p>
                                         <p className="text-sm text-gray-500">{intervenant.email}</p>
                                     </div>
-                                    {intervenant.creationdate < intervenant.enddate ? <CheckCircleIcon className="h-6 w-6 text-green-500" /> : <ExclamationCircleIcon className="h-6 w-6 text-red-500" />}
+                                    {new Date(intervenant.enddate) > today ? <CheckCircleIcon className="h-6 w-6 text-green-500" /> : <ExclamationCircleIcon className="h-6 w-6 text-red-500" />}
                                 </div>
                                 <div className="flex w-full items-center justify-between pt-4">
                                     <div>
@@ -89,7 +90,7 @@ export default function Table({ query, currentPage }: { query: string, currentPa
                                     className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                                 >
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                                        {intervenant.creationdate < intervenant.enddate ? <CheckCircleIcon className="h-6 w-6 text-green-500" /> : <ExclamationCircleIcon className="h-6 w-6 text-red-500" />}
+                                        {new Date(intervenant.enddate) > today ? <CheckCircleIcon className="h-6 w-6 text-green-500" /> : <ExclamationCircleIcon className="h-6 w-6 text-red-500" />}
                                     </td>
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         {intervenant.firstname}
