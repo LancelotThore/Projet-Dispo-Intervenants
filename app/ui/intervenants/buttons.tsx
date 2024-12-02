@@ -14,14 +14,27 @@ export function CreateIntervenants() {
   );
 }
 
-export function UpdateIntervenants({ id }: { id: string }) {
+// export function UpdateIntervenants({ id }: { id: string }) {
+//   return (
+//     <Link
+//       href={`/dashboard/intervenants/${id}/edit`}
+//       className="rounded-md border p-2 hover:bg-gray-100"
+//     >
+//       <PencilIcon className="w-5" />
+//     </Link>
+//   );
+// }
+
+export function UpdateIntervenants({ id, onDelete }: { id: string, onDelete: () => void }) {
+  const handleDelete = async () => {
+    await deleteIntervenants(id);
+    // onDelete();
+  };
+
   return (
-    <Link
-      href={`/dashboard/invoices/${id}/edit`}
-      className="rounded-md border p-2 hover:bg-gray-100"
-    >
+    <button onClick={handleDelete} className="rounded-md border p-2 hover:bg-gray-100">
       <PencilIcon className="w-5" />
-    </Link>
+    </button>
   );
 }
 
