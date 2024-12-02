@@ -140,7 +140,6 @@ export async function deleteIntervenants(id: string) {
   const client = await db.connect();
   try {
     await client.query('DELETE FROM intervenants WHERE id = $1', [id]);
-    revalidatePath('/dashboard/intervenants');
     return { message: 'Deleted Intervenant.' };
   } catch (err) {
     console.error('Database Error: Failed to Delete Intervenant.', err);
