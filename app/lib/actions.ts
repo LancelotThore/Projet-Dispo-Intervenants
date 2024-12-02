@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import db from '@/app/lib/db';
+import { v4 as uuidv4 } from 'uuid';
 
 export type State = {
   errors?: {
@@ -63,7 +64,7 @@ export async function createIntervenants(prevState: State, formData: FormData) {
   const { email, firstname, lastname } = fields;
 
   // Generate additional fields
-  const key = generateKey(); // Implement this function to generate a unique key
+  const key = uuidv4(); // Use uuid to generate a unique key
   const creationdate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
   const enddate = new Date(new Date().setMonth(new Date().getMonth() + 2)).toISOString().split('T')[0]; // Deux mois à partir de maintenant
   const availability = {}; // Default empty JSON object
@@ -147,9 +148,4 @@ export async function deleteIntervenants(id: string) {
   } finally {
     client.release();
   }
-}
-
-// Example function to generate a unique key
-function generateKey() {
-  return Math.random().toString(36).substr(2, 9);
 }
