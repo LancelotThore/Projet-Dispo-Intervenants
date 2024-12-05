@@ -35,10 +35,10 @@ export default function Gestion() {
             <CreateIntervenants />
             </div>
             <Suspense fallback={<IntervenantsTableSkeleton />}>
-                <Table query={query} currentPage={currentPage} />
+                <Table query={query} currentPage={currentPage} itemsPerPage={10} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
-                <Pagination totalPages={totalPages} />
+                <Pagination currentPage={currentPage} totalPages={totalPages} />
             </div>
         </main>
     );

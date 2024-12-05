@@ -1,10 +1,14 @@
 import db from '@/app/lib/db';
 
-// Fonction pour récupérer les intervenants
-export async function fetchIntervenants() {
+// Fonction pour récupérer les intervenants avec pagination
+export async function fetchIntervenants(query: string, page: number, limit: number) {
+  const offset = (page - 1) * limit;
   const client = await db.connect();
   try {
-    const result = await client.query('SELECT * FROM intervenants');
+    const result = await client.query(
+      'SELECT * FROM intervenants WHERE email ILIKE $1 OR firstname ILIKE $1 OR lastname ILIKE $1 LIMIT $2 OFFSET $3',
+      [`%${query}%`, limit, offset]
+    );
     return result.rows;
   } catch (err) {
     console.error('Erreur lors de la récupération des intervenants', err);

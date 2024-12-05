@@ -4,23 +4,28 @@ import { useEffect, useState } from 'react';
 import { formatDateToLocal } from '@/app/lib/utils';
 import { UpdateIntervenants, DeleteIntervenants } from '@/app/ui/intervenants/buttons';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@/app/ui/icons';
+import { Intervenants } from '@/app/lib/definitions';
 
-export default function Table({ query, currentPage }: { query: string, currentPage: number }) {
-    const [intervenants, setIntervenants] = useState([]);
+export default function Table({ query, currentPage, itemsPerPage }: { query: string; currentPage: number; itemsPerPage: number }) {
+    const [intervenants, setIntervenants] = useState<Intervenants[]>([]);
     const today = new Date();
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}`);
+            const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}&limit=${itemsPerPage}`);
             const result = await response.json();
-            setIntervenants(result);
+            if (Array.isArray(result)) {
+                setIntervenants(result);
+            } else {
+                setIntervenants([]);
+            }
         };
 
         fetchData();
-    }, [query, currentPage]);
+    }, [query, currentPage, itemsPerPage]);
 
     const refreshData = async () => {
-        const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}`);
+        const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}&limit=${itemsPerPage}`);
         const result = await response.json();
         setIntervenants(result);
     };
