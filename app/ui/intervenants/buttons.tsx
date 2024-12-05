@@ -1,6 +1,6 @@
-import { PencilIcon, PlusIcon, TrashIcon } from '@/app/ui/icons';
+import { KeyIcon, PencilIcon, PlusIcon, TrashIcon, ArrowPathIcon } from '@/app/ui/icons';
 import Link from 'next/link';
-import { deleteIntervenants, createIntervenants } from '@/app/lib/actions';
+import { deleteIntervenants, createIntervenants, newKeyIntervenants, regenerateAllKeys } from '@/app/lib/actions';
 
 export function CreateIntervenants() {
   return (
@@ -14,7 +14,7 @@ export function CreateIntervenants() {
   );
 }
 
-export function UpdateIntervenants({ id }: { id: string }) {
+export function UpdateIntervenants({ id }: { id: number }) {
   return (
     <Link
       href={`/dashboard/edit/${id}`}
@@ -25,7 +25,7 @@ export function UpdateIntervenants({ id }: { id: string }) {
   );
 }
 
-export function DeleteIntervenants({ id, onDelete }: { id: string, onDelete: () => void }) {
+export function DeleteIntervenants({ id, onDelete }: { id: number, onDelete: () => void }) {
   const handleDelete = async () => {
     await deleteIntervenants(id);
     onDelete();
@@ -34,6 +34,33 @@ export function DeleteIntervenants({ id, onDelete }: { id: string, onDelete: () 
   return (
     <button onClick={handleDelete} className="rounded-md border p-2 hover:bg-gray-100">
       <TrashIcon className="w-5" />
+    </button>
+  );
+}
+
+export function NewKeyIntervenants({ id, onRegenerate }: { id: number, onRegenerate: () => void }) {
+  const handleNewKey = async () => {
+    await newKeyIntervenants(id);
+    onRegenerate();
+  };
+
+  return (
+    <button onClick={handleNewKey} className="rounded-md border p-2 hover:bg-gray-100">
+      <KeyIcon className="w-5" />
+    </button>
+  );
+}
+
+export function RegenerateAllKeys({ onRegenerate }: { onRegenerate: () => void }) {
+  const handleRegenerateAll = async () => {
+    await regenerateAllKeys();
+    onRegenerate();
+  };
+
+  return (
+    <button onClick={handleRegenerateAll} className="flex gap-2 rounded-md border p-2 hover:bg-gray-100">
+      <ArrowPathIcon className="w-5" />
+      <KeyIcon className='w-5' />
     </button>
   );
 }

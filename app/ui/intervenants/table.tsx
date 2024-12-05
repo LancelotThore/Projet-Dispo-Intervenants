@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { formatDateToLocal } from '@/app/lib/utils';
-import { UpdateIntervenants, DeleteIntervenants } from '@/app/ui/intervenants/buttons';
+import { NewKeyIntervenants, UpdateIntervenants, DeleteIntervenants } from '@/app/ui/intervenants/buttons';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@/app/ui/icons';
 import { Intervenants } from '@/app/lib/definitions';
 
@@ -58,6 +58,7 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
                                         <p>{formatDateToLocal(intervenant.enddate)}</p>
                                     </div>
                                     <div className='flex gap-2'>
+                                        <NewKeyIntervenants id={intervenant.id} onRegenerate={refreshData} />
                                         <UpdateIntervenants id={intervenant.id} />
                                         <DeleteIntervenants id={intervenant.id} onDelete={refreshData} />
                                     </div>
@@ -123,6 +124,7 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
                                     </td>
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         <div className="flex justify-end gap-3">
+                                            <NewKeyIntervenants id={intervenant.id} onRegenerate={refreshData} />
                                             <UpdateIntervenants id={intervenant.id} />
                                             <DeleteIntervenants id={intervenant.id} onDelete={refreshData} />
                                         </div>

@@ -137,7 +137,7 @@ export async function updateIntervenants(
   redirect('/dashboard');
 }
 
-export async function deleteIntervenants(id: string) {
+export async function deleteIntervenants(id: number) {
   const client = await db.connect();
   try {
     await client.query('DELETE FROM intervenants WHERE id = $1', [id]);
@@ -145,6 +145,45 @@ export async function deleteIntervenants(id: string) {
   } catch (err) {
     console.error('Database Error: Failed to Delete Intervenant.', err);
     return { message: 'Database Error: Failed to Delete Intervenant.' };
+  } finally {
+    client.release();
+  }
+}
+
+export async function newKeyIntervenants(id: number) {
+  const newKey = uuidv4();
+  const newEndDate = new Date(new Date().setMonth(new Date().getMonth() + 2)).toISOString().split('T')[0];
+
+  const client = await db.connect();
+  try {
+    await client.query(
+      'UPDATE intervenants SET key = $1, enddate = $2 WHERE id = $3',
+      [newKey, newEndDate, id]
+    );
+  } catch (err) {
+    console.error('Database Error: Failed to Regenerate Key.', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function regenerateAllKeys() {
+  const newEndDate = new Date(new Date().setMonth(new Date().getMonth() + 2)).toISOString().split('T')[0];
+
+  const client = await db.connect();
+  try {
+    const intervenants = await client.query('SELECT id FROM intervenants');
+    for (const intervenant of intervenants.rows) {
+      const newKey = uuidv4();
+      await client.query(
+        'UPDATE intervenants SET key = $1, enddate = $2 WHERE id = $3',
+        [newKey, newEndDate, intervenant.id]
+      );
+    }
+  } catch (err) {
+    console.error('Database Error: Failed to Regenerate All Keys.', err);
+    throw err;
   } finally {
     client.release();
   }

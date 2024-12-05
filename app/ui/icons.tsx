@@ -156,5 +156,21 @@ function UserCircleIcon(props: SVGAttributes<SVGElement>) {
   );
 }
 
+function KeyIcon(props: SVGAttributes<SVGElement>) {
+  return (
+    <svg data-slot="icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" {...props}>
+      <path clipRule="evenodd" fillRule="evenodd" d="M15.75 1.5a6.75 6.75 0 0 0-6.651 7.906c.067.39-.032.717-.221.906l-6.5 6.499a3 3 0 0 0-.878 2.121v2.818c0 .414.336.75.75.75H6a.75.75 0 0 0 .75-.75v-1.5h1.5A.75.75 0 0 0 9 19.5V18h1.5a.75.75 0 0 0 .53-.22l2.658-2.658c.19-.189.517-.288.906-.22A6.75 6.75 0 1 0 15.75 1.5Zm0 3a.75.75 0 0 0 0 1.5A2.25 2.25 0 0 1 18 8.25a.75.75 0 0 0 1.5 0 3.75 3.75 0 0 0-3.75-3.75Z" />
+    </svg>
+  );
+}
 
-export { gestionIcon, disponibilityIcon, signOutIcon, ExclamationCircleIcon, CheckCircleIcon, SearchIcon, TrashIcon, PencilIcon, PlusIcon, IdentificationIcon, AtSymbolIcon, UserPlusIcon, CheckIcon, ClockIcon, CurrencyDollarIcon, UserCircleIcon };
+function ArrowPathIcon(props: SVGAttributes<SVGElement>) {
+  return (
+    <svg data-slot="icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" {...props}>
+      <path clipRule="evenodd" fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" />
+    </svg>
+  );
+}
+
+
+export { gestionIcon, disponibilityIcon, signOutIcon, ExclamationCircleIcon, CheckCircleIcon, SearchIcon, TrashIcon, PencilIcon, PlusIcon, IdentificationIcon, AtSymbolIcon, UserPlusIcon, CheckIcon, ClockIcon, CurrencyDollarIcon, UserCircleIcon, KeyIcon, ArrowPathIcon };
