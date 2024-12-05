@@ -6,7 +6,7 @@ export async function fetchIntervenants(query: string, page: number, limit: numb
   const client = await db.connect();
   try {
     const result = await client.query(
-      'SELECT * FROM intervenants WHERE email ILIKE $1 OR firstname ILIKE $1 OR lastname ILIKE $1 LIMIT $2 OFFSET $3',
+      'SELECT * FROM intervenants WHERE email ILIKE $1 OR firstname ILIKE $1 OR lastname ILIKE $1 ORDER BY lastname, firstname LIMIT $2 OFFSET $3',
       [`%${query}%`, limit, offset]
     );
     return result.rows;
