@@ -8,4 +8,6 @@
     - Itération 4 : Création de la page Gestion des intervenants - lecture
     - Itération 5 : Création de la page Gestion des intervenants - suppression
     - Itération 6 : Création de la page Gestion des intervenants - ajout
+    - Itération 7 : Création de la page Gestion des intervenants - édition
+    - 
     - Itération 9 : [BDD] Ajout des administrateurs

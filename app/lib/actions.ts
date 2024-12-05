@@ -106,6 +106,7 @@ export async function updateIntervenants(
     email: formData.get('email'),
     firstname: formData.get('firstname'),
     lastname: formData.get('lastname'),
+    enddate: formData.get('enddate'), // Ajout de la date de validité
   };
 
   const errors = validateFields(fields);
@@ -117,13 +118,13 @@ export async function updateIntervenants(
     };
   }
 
-  const { email, firstname, lastname } = fields;
+  const { email, firstname, lastname, enddate } = fields;
 
   const client = await db.connect();
   try {
     await client.query(
-      'UPDATE intervenants SET email = $1, firstname = $2, lastname = $3 WHERE id = $4',
-      [email, firstname, lastname, id]
+      'UPDATE intervenants SET email = $1, firstname = $2, lastname = $3, enddate = $4 WHERE id = $5',
+      [email, firstname, lastname, enddate, id]
     );
   } catch (err) {
     console.error('Database Error: Failed to Update Intervenant.', err);
@@ -132,8 +133,8 @@ export async function updateIntervenants(
     client.release();
   }
 
-  revalidatePath('/dashboard/intervenants');
-  redirect('/dashboard/intervenants');
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
 }
 
 export async function deleteIntervenants(id: string) {
