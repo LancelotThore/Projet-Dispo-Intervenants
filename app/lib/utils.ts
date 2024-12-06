@@ -1,3 +1,5 @@
+import db from '@/app/lib/db';
+
 export const formatDateToLocal = (
   dateStr: string,
   locale: string = 'fr-FR',
