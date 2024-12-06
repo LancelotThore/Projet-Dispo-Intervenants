@@ -44,8 +44,10 @@ export const validateKey = async (key: string) => {
     }
 
     const intervenant = result.rows[0];
-    const currentDate = new Date().toISOString().split('T')[0];
-    if (intervenant.enddate < currentDate) {
+    const currentDate = new Date();
+    const endDate = new Date(intervenant.enddate);
+
+    if (endDate < currentDate) {
       return { valid: false, message: 'Clé expirée' };
     }
 
