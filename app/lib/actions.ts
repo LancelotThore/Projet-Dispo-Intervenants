@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import db from '@/app/lib/db';
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
 
 export type State = {
   errors?: {
@@ -13,7 +14,6 @@ export type State = {
   };
   message?: string | null;
 };
-
 const validateFields = (fields: { email: any; firstname: any; lastname: any }) => {
   const errors: State['errors'] = {};
 
@@ -184,6 +184,37 @@ export async function regenerateAllKeys() {
   } catch (err) {
     console.error('Database Error: Failed to Regenerate All Keys.', err);
     throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function createAdminUser() {
+  const client = await db.connect();
+  try {
+    const email = 'admin1@admin';
+    const firstname = 'admin2';
+    const lastname = 'admin2';
+    const password = 'admin2';
+
+    // Check if email already exists
+    const emailCheck = await client.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (emailCheck.rows.length > 0) {
+      return { message: 'Admin user already exists.' };
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await client.query(
+      'INSERT INTO users (email, firstname, lastname, password) VALUES ($1, $2, $3, $4)',
+      [email, firstname, lastname, hashedPassword]
+    );
+
+    return { message: 'Admin user created successfully.' };
+  } catch (err) {
+    console.error('Database Error: Failed to Create Admin User.', err);
+    return { message: 'Database Error: Failed to Create Admin User.' };
   } finally {
     client.release();
   }
