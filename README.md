@@ -1,6 +1,7 @@
 ## 06/11/2024
     - Itération 7 : Création de la page Gestion des intervenants - édition
     - Itération 8 : Création de la page Gestion des intervenants - régénérer la clé
+    - Itération 11 : Accès par clé
 
 ## 29/11/2024
     - Itération 2 : Création du dashboard (vide) d’administration
