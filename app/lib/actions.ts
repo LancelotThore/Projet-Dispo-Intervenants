@@ -14,6 +14,7 @@ export type State = {
   };
   message?: string | null;
 };
+
 const validateFields = (fields: { email: any; firstname: any; lastname: any }) => {
   const errors: State['errors'] = {};
 
