@@ -1,8 +1,8 @@
 import { validateKey } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
-const AvailabilityPage = async ({ searchParams }: { searchParams: { key?: string } }) => {
-  const key = searchParams.key;
+const AvailabilityPage = async ({ params }: { params: { key: string } }) => {
+  const key = params.key;
 
   if (!key || typeof key !== 'string') {
     notFound();

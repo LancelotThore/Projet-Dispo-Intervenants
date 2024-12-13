@@ -20,7 +20,7 @@
 
 
 # .env
-AUTH_SECRET=your-secret-key
+    AUTH_SECRET=your-secret-key
 
 # Generate key
-openssl rand -base64 32
+    openssl rand -base64 32
