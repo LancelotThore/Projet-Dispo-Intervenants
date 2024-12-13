@@ -55,7 +55,7 @@ export default function Calendar({ availability }: { availability: string }) {
     function AvailabilityIntoEvents(availability: any) {
       let events: { title: string; start: string; end: string; url?: string; groupId?: string }[] = [];
       const JourSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
-      
+            
       const Currentyear = new Date().getFullYear();
       const DebutAnneeScolaire = new Date(Currentyear, 8, 1); 
       const FinAnneeScolaire = new Date(Currentyear + 1, 6, 1); 
@@ -75,35 +75,32 @@ export default function Calendar({ availability }: { availability: string }) {
     
         events = events.filter(event => event.groupId !== week);
     
-        // Vérifiez si weekAvailability est un tableau
-        if (Array.isArray(weekAvailability)) {
-          for (const availability of weekAvailability) {
-            if (!availability.days) continue;
-            const days = availability.days.split(', ');
-            const from = parse(availability.from, 'HH:mm', new Date());
-            const to = parse(availability.to, 'HH:mm', new Date());
-      
-            if (isNaN(from.getTime())) {
-              console.error(`Invalid 'from' time: ${availability.from}`);
-              continue;
-            }
-            if (isNaN(to.getTime())) {
-              console.error(`Invalid 'to' time: ${availability.to}`);
-              continue;
-            }
-      
-            for (const day of days) {
-              const dayIndex = JourSemaine.indexOf(day);
-              const start = addDays(startOfWeek(weekStart, { weekStartsOn: 1 }), dayIndex);
-              const startTime = addMinutes(start, from.getHours() * 60 + from.getMinutes());
-              const endTime = addMinutes(start, to.getHours() * 60 + to.getMinutes());
-              events.push({
-                title: 'Disponible',
-                start: startTime.toISOString(),
-                end: endTime.toISOString(),
-                groupId: week
-              });
-            }
+        for (const availability of weekAvailability as { days: string; from: string; to: string }[]) {
+          if (!availability.days) continue;
+          const days = availability.days.split(', ');
+          const from = parse(availability.from, 'HH:mm', new Date());
+          const to = parse(availability.to, 'HH:mm', new Date());
+    
+          if (isNaN(from.getTime())) {
+            console.error(`Invalid 'from' time: ${availability.from}`);
+            continue;
+          }
+          if (isNaN(to.getTime())) {
+            console.error(`Invalid 'to' time: ${availability.to}`);
+            continue;
+          }
+    
+          for (const day of days) {
+            const dayIndex = JourSemaine.indexOf(day);
+            const start = addDays(startOfWeek(weekStart, { weekStartsOn: 1 }), dayIndex);
+            const startTime = addMinutes(start, from.getHours() * 60 + from.getMinutes());
+            const endTime = addMinutes(start, to.getHours() * 60 + to.getMinutes());
+            events.push({
+              title: 'Disponible',
+              start: startTime.toISOString(),
+              end: endTime.toISOString(),
+              groupId: week
+            });
           }
         }
       }

@@ -19,6 +19,7 @@ const AvailabilityPage = async ({ params }: { params: { key: string } }) => {
   }
 
   return (
+    console.log(intervenant.availability),
     <main>
               
         <h1>Disponibilités de {intervenant.firstname}</h1>
