@@ -62,7 +62,7 @@ export const fetchIntervenantAvailability = async (intervenantId: number) => {
   }
 };
 
-export const validateKey = async (key: string) => {
+export const fetchIntervenantByKey = async (key: string) => {
   const client = await db.connect();
   try {
     const result = await client.query(
@@ -89,4 +89,3 @@ export const validateKey = async (key: string) => {
     client.release();
   }
 };
-

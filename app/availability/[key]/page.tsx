@@ -1,5 +1,6 @@
-import { validateKey } from '@/app/lib/data';
+import { fetchIntervenantByKey } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
+import Calendar from '@/app/ui/calendar';
 
 const AvailabilityPage = async ({ params }: { params: { key: string } }) => {
   const key = params.key;
@@ -8,7 +9,7 @@ const AvailabilityPage = async ({ params }: { params: { key: string } }) => {
     notFound();
   }
 
-  const { valid, intervenant, message } = await validateKey(key);
+  const { valid, intervenant, message } = await fetchIntervenantByKey(key);
 
   if (!valid) {
     if (message === 'Clé inconnue') {
@@ -17,7 +18,13 @@ const AvailabilityPage = async ({ params }: { params: { key: string } }) => {
     return <div>{message}</div>;
   }
 
-  return <div>Bonjour {intervenant.firstname} {intervenant.lastname}</div>;
+  return (
+    <main>
+              
+        <h1>Disponibilités de {intervenant.firstname}</h1>
+        <Calendar availability={intervenant.availability ?? ''} />
+    </main>
+  );
 };
 
 export default AvailabilityPage;
