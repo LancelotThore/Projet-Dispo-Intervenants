@@ -6,12 +6,67 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useEffect, useState } from 'react';
 import { startOfYear, eachWeekOfInterval, format, parse, addDays, startOfWeek, addMinutes } from 'date-fns';
+import { updateAvailabilityByKey } from '@/app/lib/actions';
 
-interface Availability {
-  [key: string]: any;
+function AvailabilityIntoEvents(availability: any) {
+  let events: { title: string; start: string; end: string; url?: string; groupId?: string }[] = [];
+  const JourSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+        
+  const Currentyear = new Date().getFullYear();
+  const DebutAnneeScolaire = new Date(Currentyear, 8, 1); 
+  const FinAnneeScolaire = new Date(Currentyear + 1, 6, 1); 
+  const allWeeks = eachWeekOfInterval({ start: DebutAnneeScolaire, end: FinAnneeScolaire }, { weekStartsOn: 1 });
+
+  for (const weekStart of allWeeks) {
+    const weekNumber = format(weekStart, 'I'); 
+    if (!availability[`S${weekNumber}`] && availability.default !== null) {
+      availability[`S${weekNumber}`] = availability.default;
+    }
+  }
+
+  for (const [week, weekAvailability] of Object.entries(availability)) {
+    if (week === 'default') continue;
+    const weekStart = allWeeks.find(w => format(w, 'I') === week.replace('S', ''));
+    if (!weekStart) continue;
+
+    events = events.filter(event => event.groupId !== week);
+
+    if (Array.isArray(weekAvailability)) {
+      for (const availability of weekAvailability as { days: string; from: string; to: string }[]) {
+        if (!availability.days) continue;
+        const days = availability.days.split(', ');
+        const from = parse(availability.from, 'HH:mm', new Date());
+        const to = parse(availability.to, 'HH:mm', new Date());
+
+        if (isNaN(from.getTime())) {
+          console.error(`Invalid 'from' time: ${availability.from}`);
+          continue;
+        }
+        if (isNaN(to.getTime())) {
+          console.error(`Invalid 'to' time: ${availability.to}`);
+          continue;
+        }
+
+        for (const day of days) {
+          const dayIndex = JourSemaine.indexOf(day);
+          const start = addDays(startOfWeek(weekStart, { weekStartsOn: 1 }), dayIndex);
+          const startTime = addMinutes(start, from.getHours() * 60 + from.getMinutes());
+          const endTime = addMinutes(start, to.getHours() * 60 + to.getMinutes());
+          events.push({
+            title: 'Disponible',
+            start: startTime.toISOString(),
+            end: endTime.toISOString(),
+            groupId: week
+          });
+        }
+      }
+    }
+  }
+
+  return events;
 }
 
-export default function Calendar({ availability }: { availability: string }) {
+export default function Calendar({ availability, intervenantKey }: { availability: Record<string, any>, intervenantKey: string }) {
   const [calendarView, setCalendarView] = useState("timeGridWeek");
   const [headerToolbar, setHeaderToolbar] = useState({
     left: "title prev,next today",
@@ -52,104 +107,55 @@ export default function Calendar({ availability }: { availability: string }) {
   }, []);
 
   useEffect(() => {
-    function AvailabilityIntoEvents(availability: any) {
-      let events: { title: string; start: string; end: string; url?: string; groupId?: string }[] = [];
-      const JourSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
-            
-      const Currentyear = new Date().getFullYear();
-      const DebutAnneeScolaire = new Date(Currentyear, 8, 1); 
-      const FinAnneeScolaire = new Date(Currentyear + 1, 6, 1); 
-      const allWeeks = eachWeekOfInterval({ start: DebutAnneeScolaire, end: FinAnneeScolaire }, { weekStartsOn: 1 });
-    
-      for (const weekStart of allWeeks) {
-        const weekNumber = format(weekStart, 'I'); 
-        if (!availability[`S${weekNumber}`] && availability.default !== null) {
-          availability[`S${weekNumber}`] = availability.default;
-        }
-      }
-    
-      for (const [week, weekAvailability] of Object.entries(availability)) {
-        if (week === 'default') continue;
-        const weekStart = allWeeks.find(w => format(w, 'I') === week.replace('S', ''));
-        if (!weekStart) continue;
-    
-        events = events.filter(event => event.groupId !== week);
-    
-        if (Array.isArray(weekAvailability)) {
-          for (const availability of weekAvailability as { days: string; from: string; to: string }[]) {
-            if (!availability.days) continue;
-            const days = availability.days.split(', ');
-            const from = parse(availability.from, 'HH:mm', new Date());
-            const to = parse(availability.to, 'HH:mm', new Date());
-    
-            if (isNaN(from.getTime())) {
-              console.error(`Invalid 'from' time: ${availability.from}`);
-              continue;
-            }
-            if (isNaN(to.getTime())) {
-              console.error(`Invalid 'to' time: ${availability.to}`);
-              continue;
-            }
-    
-            for (const day of days) {
-              const dayIndex = JourSemaine.indexOf(day);
-              const start = addDays(startOfWeek(weekStart, { weekStartsOn: 1 }), dayIndex);
-              const startTime = addMinutes(start, from.getHours() * 60 + from.getMinutes());
-              const endTime = addMinutes(start, to.getHours() * 60 + to.getMinutes());
-              events.push({
-                title: 'Disponible',
-                start: startTime.toISOString(),
-                end: endTime.toISOString(),
-                groupId: week
-              });
-            }
-          }
-        }
-      }
-    
-      return events;
-    }
-
     const transformedEvents = AvailabilityIntoEvents(availability);
     setEvents(transformedEvents);
   }, [availability]);
 
-  const handleSelect = (selectInfo: any) => {
+  const handleSelect = async (selectInfo: any) => {
     const start = new Date(selectInfo.start);
     const end = new Date(selectInfo.end);
     const day = start.toLocaleDateString("fr-FR", { weekday: "long" });
     const from = start.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
     const to = end.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
-
+  
+    const weekNumber = format(start, 'I');  // Identifie la semaine à partir de la date sélectionnée
+    const weekKey = `S${weekNumber}`;  // La clé de la semaine (par ex. S51)
+  
+    // Crée un objet pour la nouvelle disponibilité
     const newAvailability = {
       days: day,
       from: from,
       to: to
     };
-
-    const weekNumber = format(start, 'I');
-    const weekKey = `S${weekNumber}`;
-
+    
+    console.log('Nouvelle disponibilité:', newAvailability);
+  
+    // On crée une copie des disponibilités existantes
     const updatedAvailability = { ...availability };
-
+  
+    // Si la semaine spécifiée n'existe pas encore dans la disponibilité, on l'initialise comme un tableau vide
     if (!updatedAvailability[weekKey]) {
       updatedAvailability[weekKey] = [];
     }
-
+  
+    // Ajoute la nouvelle disponibilité à la semaine spécifiée
     updatedAvailability[weekKey].push(newAvailability);
-
-    // Remove weeks that match the default availability
-    if (updatedAvailability.default) {
-      for (const [week, weekAvailabilities] of Object.entries(updatedAvailability)) {
-        if (week === 'default') continue;
-        if (JSON.stringify(weekAvailabilities) === JSON.stringify(updatedAvailability.default)) {
-          delete updatedAvailability[week];
-        }
-      }
+    
+    console.log('Disponibilités mises à jour:', updatedAvailability);
+  
+    // Enregistrer les nouvelles disponibilités dans la base de données
+    try {
+      console.log('Clé de l’intervenant:', intervenantKey);
+      await updateAvailabilityByKey(intervenantKey, updatedAvailability);
+      console.log('Disponibilités mises à jour avec succès');
+  
+      // Mettre à jour l'état des disponibilités pour déclencher la mise à jour de l'affichage
+      setEvents(AvailabilityIntoEvents(updatedAvailability));
+      console.log('Événements mis à jour avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des disponibilités', error);
     }
-
-    console.log(updatedAvailability);
-  };
+  };  
 
   return (
     <FullCalendar
@@ -177,6 +183,7 @@ export default function Calendar({ availability }: { availability: string }) {
       slotMinTime="08:00:00"
       slotMaxTime="19:30:00"
       hiddenDays={[0, 6]}
+      eventOverlap={false}
       dayHeaderContent={(args) => {
         const date = new Date(args.date);
         const day = date.toLocaleDateString("fr-FR", { weekday: "short" });

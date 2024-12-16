@@ -210,3 +210,25 @@ export async function authenticate(
     throw error;
   }
 }
+
+export async function updateAvailabilityByKey(key: string, newAvailability: Record<string, any>) {
+  const client = await db.connect();
+  try {
+    const availabilityJson = JSON.stringify(newAvailability); // Convertir en JSON
+    const result = await client.query(
+      'UPDATE intervenants SET availability = $1 WHERE key = $2 RETURNING *',
+      [availabilityJson, key]
+    );
+
+    if (result.rows.length === 0) {
+      throw new Error('Intervenant non trouvé');
+    }
+
+    return result.rows[0];
+  } catch (err) {
+    console.error('Erreur lors de la mise à jour des disponibilités', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}

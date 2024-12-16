@@ -19,10 +19,9 @@ const AvailabilityPage = async ({ params }: { params: { key: string } }) => {
   }
 
   return (
-    console.log(intervenant.availability),
     <main className="container m-auto my-8">     
         <h1 className="text-center text-4xl mb-8">Disponibilités de {intervenant.firstname} {intervenant.lastname}</h1>
-        <Calendar availability={intervenant.availability ?? ''} />
+        <Calendar availability={intervenant.availability ?? ''} intervenantKey={intervenant.key} />
     </main>
   );
 };
