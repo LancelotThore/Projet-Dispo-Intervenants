@@ -139,6 +139,7 @@ export default function Calendar({ availability }: { availability: string }) {
       dayMaxEvents={true}
       slotMinTime="08:00:00"
       slotMaxTime="19:30:00"
+      hiddenDays={[0, 6]}
       dayHeaderContent={(args) => {
         const date = new Date(args.date);
         const day = date.toLocaleDateString("fr-FR", { weekday: "short" });
