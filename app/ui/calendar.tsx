@@ -114,6 +114,43 @@ export default function Calendar({ availability }: { availability: string }) {
     setEvents(transformedEvents);
   }, [availability]);
 
+  const handleSelect = (selectInfo: any) => {
+    const start = new Date(selectInfo.start);
+    const end = new Date(selectInfo.end);
+    const day = start.toLocaleDateString("fr-FR", { weekday: "long" });
+    const from = start.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+    const to = end.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+
+    const newAvailability = {
+      days: day,
+      from: from,
+      to: to
+    };
+
+    const weekNumber = format(start, 'I');
+    const weekKey = `S${weekNumber}`;
+
+    const updatedAvailability = { ...availability };
+
+    if (!updatedAvailability[weekKey]) {
+      updatedAvailability[weekKey] = [];
+    }
+
+    updatedAvailability[weekKey].push(newAvailability);
+
+    // Remove weeks that match the default availability
+    if (updatedAvailability.default) {
+      for (const [week, weekAvailabilities] of Object.entries(updatedAvailability)) {
+        if (week === 'default') continue;
+        if (JSON.stringify(weekAvailabilities) === JSON.stringify(updatedAvailability.default)) {
+          delete updatedAvailability[week];
+        }
+      }
+    }
+
+    console.log(updatedAvailability);
+  };
+
   return (
     <FullCalendar
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -151,6 +188,7 @@ export default function Calendar({ availability }: { availability: string }) {
           </div>
         );
       }}
+      select={handleSelect}
     />
   );
 }
