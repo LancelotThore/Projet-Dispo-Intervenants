@@ -3,23 +3,7 @@
 
 ## 13/12/2024
     - Itération 10 : Protection de l'accès au dashboard d’administration
-    
-    - Itération 12 : Visualisation des disponibilités pour l’intervenant identifié 
-    mais problème pour les semaines où il y a des exceptions toutes les données de la semaine sont remplacées même les jours de la semaine où il y n'y a rien de préciser par exemple :
-    
-    {
-        "default": [{
-            "days": "lundi, mardi, mercredi, jeudi, vendredi",
-            "from": "8:00",
-            "to": "19:30"
-        }],
-        "S51": [{
-            "days": "lundi, mercredi",
-            "from": "9:00",
-            "to": "11:30"
-        }]
-    }
-    lundi et mercredi ont les bonnes informations mais le mardi, jeudi et vendredi sont vides
+    - Itération 12 : Visualisation des disponibilités pour l’intervenant identifié
 
 ## 06/11/2024
     - Itération 7 : Création de la page Gestion des intervenants - édition
