@@ -1,3 +1,6 @@
+## 20/12/2024
+    - Itération 13 : Ajouter une disponibilité
+
 ## 13/12/2024
     - Itération 10 : Protection de l'accès au dashboard d’administration
     

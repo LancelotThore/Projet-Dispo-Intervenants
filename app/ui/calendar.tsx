@@ -127,9 +127,7 @@ export default function Calendar({ availability, intervenantKey }: { availabilit
       from: from,
       to: to
     };
-    
-    console.log('Nouvelle disponibilité:', newAvailability);
-  
+      
     // On crée une copie des disponibilités existantes
     const updatedAvailability = { ...availability };
   
@@ -140,22 +138,17 @@ export default function Calendar({ availability, intervenantKey }: { availabilit
   
     // Ajoute la nouvelle disponibilité à la semaine spécifiée
     updatedAvailability[weekKey].push(newAvailability);
-    
-    console.log('Disponibilités mises à jour:', updatedAvailability);
-  
+      
     // Enregistrer les nouvelles disponibilités dans la base de données
     try {
-      console.log('Clé de l’intervenant:', intervenantKey);
       await updateAvailabilityByKey(intervenantKey, updatedAvailability);
-      console.log('Disponibilités mises à jour avec succès');
   
       // Mettre à jour l'état des disponibilités pour déclencher la mise à jour de l'affichage
       setEvents(AvailabilityIntoEvents(updatedAvailability));
-      console.log('Événements mis à jour avec succès');
     } catch (error) {
       console.error('Erreur lors de la mise à jour des disponibilités', error);
     }
-  };  
+  };
 
   return (
     <FullCalendar
@@ -177,6 +170,7 @@ export default function Calendar({ availability, intervenantKey }: { availabilit
       weekNumbers={true}
       navLinks={true}
       editable={true}
+      eventColor="#b61621"
       selectable={true}
       selectMirror={true}
       dayMaxEvents={true}
