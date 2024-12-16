@@ -169,6 +169,7 @@ export default function Calendar({ availability: initialAvailability, intervenan
     const eventToDelete = selectedEvent.event;
     const weekNumber = format(new Date(eventToDelete.start), 'I');
     const weekKey = `S${weekNumber}`;
+    const JourSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']; // Ajoutez cette ligne
 
     const updatedAvailability = { ...availability };
     if (updatedAvailability[weekKey]) {
@@ -177,8 +178,11 @@ export default function Calendar({ availability: initialAvailability, intervenan
         const slotEnd = parse(slot.to, 'HH:mm', new Date());
         const eventStart = new Date(eventToDelete.start);
         const eventEnd = new Date(eventToDelete.end);
+        const slotDay = slot.days.split(', ').map((day: string) => JourSemaine.indexOf(day));
+        const eventDay = eventStart.getDay() - 1; // Convertir le jour de l'événement en index (0 pour lundi, 6 pour dimanche)
         return !(slotStart.getHours() === eventStart.getHours() && slotStart.getMinutes() === eventStart.getMinutes() &&
-                 slotEnd.getHours() === eventEnd.getHours() && slotEnd.getMinutes() === eventEnd.getMinutes());
+                 slotEnd.getHours() === eventEnd.getHours() && slotEnd.getMinutes() === eventEnd.getMinutes() &&
+                 slotDay.includes(eventDay));
       });
 
       if (updatedAvailability[weekKey].length === 0) {
