@@ -214,7 +214,15 @@ export async function authenticate(
 export async function updateAvailabilityByKey(key: string, newAvailability: Record<string, any>) {
   const client = await db.connect();
   try {
-    const availabilityJson = JSON.stringify(newAvailability); // Convertir en JSON
+    const defaultAvailability = newAvailability.default || [];
+    const filteredAvailability = Object.entries(newAvailability).reduce((acc, [week, availability]) => {
+      if (week === 'default' || JSON.stringify(availability) !== JSON.stringify(defaultAvailability)) {
+        acc[week] = availability;
+      }
+      return acc;
+    }, {} as Record<string, any>);
+
+    const availabilityJson = JSON.stringify(filteredAvailability); // Convertir en JSON
     const result = await client.query(
       'UPDATE intervenants SET availability = $1 WHERE key = $2 RETURNING *',
       [availabilityJson, key]

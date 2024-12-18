@@ -2,6 +2,7 @@
     - Itération 13 : Ajouter une disponibilité
     - Itération 14 : Supprimer une disponibilité
     - Itération 15 : Edition d’une disponibilité
+    - Itération 16 : Disponibilités par défaut
 
 ## 13/12/2024
     - Itération 10 : Protection de l'accès au dashboard d’administration

@@ -1,46 +1,774 @@
-CREATE TABLE intervenants (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    firstname VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL,
-    key VARCHAR(255) NOT NULL,
-    creationdate DATE NOT NULL,
-    enddate DATE NOT NULL,
-    availability JSON
-);
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    firstname VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-);
-
-INSERT INTO intervenants (email, firstname, lastname, key, creationdate, enddate, availability)
-VALUES
-('laura.martin@unilim.fr', 'Laura', 'Martin', 'laura-key', '2022-01-10', '2023-01-10', '{}'),  -- Expiré
-('jean.dupont@unilim.fr', 'Jean', 'Dupont', 'jean-key', '2023-03-22', '2025-03-22', '{}'),  -- Expiré
-('maria.lopez@unilim.fr', 'Maria', 'Lopez', 'maria-key', '2023-11-10', '2024-11-10', '{}'),  -- Expiré
-('paul.garcia@unilim.fr', 'Paul', 'Garcia', 'paul-key', '2023-06-05', '2026-06-05', '{}'),  -- Expiré
-('isabelle.roux@unilim.fr', 'Isabelle', 'Roux', 'isabelle-key', '2022-11-15', '2023-11-15', '{}'),  -- Expiré
-('jacques.bernard@unilim.fr', 'Jacques', 'Bernard', 'jacques-key', '2023-10-05', '2024-10-05', '{}'),  -- Expiré
-('nathalie.jones@unilim.fr', 'Nathalie', 'Jones', 'nathalie-key', '2024-01-10', '2025-01-10', '{}'),  -- Valide
-('olivier.lemoine@unilim.fr', 'Olivier', 'Lemoine', 'olivier-key', '2024-02-15', '2025-02-15', '{}'),  -- Valide
-('emilie.durand@unilim.fr', 'Emilie', 'Durand', 'emilie-key', '2024-03-05', '2025-03-05', '{}'),  -- Valide
-('antoine.dupuis@unilim.fr', 'Antoine', 'Dupuis', 'antoine-key', '2023-08-15', '2024-08-15', '{}'),  -- Expiré
-
-('yannick.boudon@unilim.fr', 'Yannick', 'Boudon', 'yannick-key', '2024-05-01', '2025-05-01', '{}'),  -- Valide
-('sophie.ribeiro@unilim.fr', 'Sophie', 'Ribeiro', 'sophie-key', '2024-06-15', '2025-06-15', '{}'),  -- Valide
-('sebastien.rodriguez@unilim.fr', 'Sébastien', 'Rodriguez', 'sebastien-key', '2024-08-12', '2025-08-12', '{}'),  -- Valide
-('lucie.bourdon@unilim.fr', 'Lucie', 'Bourdon', 'lucie-key', '2022-02-02', '2023-02-02', '{}'),  -- Expiré
-('marc.tanguy@unilim.fr', 'Marc', 'Tanguy', 'marc-key', '2024-04-10', '2025-04-10', '{}'),  -- Valide
-('julie.leclercq@unilim.fr', 'Julie', 'Leclercq', 'julie-key', '2023-12-18', '2024-12-18', '{}'),  -- Expiré
-('chris.meyer@unilim.fr', 'Chris', 'Meyer', 'chris-key', '2024-07-20', '2025-07-20', '{}'),  -- Valide
-('aline.girard@unilim.fr', 'Aline', 'Girard', 'aline-key', '2024-09-30', '2025-09-30', '{}'),  -- Valide
-('george.martinez@unilim.fr', 'George', 'Martinez', 'george-key', '2023-07-18', '2024-07-18', '{}');  -- Expiré
-
-
-INSERT INTO users (email, firstname, lastname, password)
-VALUES
-('user@nextmail.com', 'User', 'Next', '$2b$10$wciirz73qduyU9NY57uw7ugHjUQH.flZ6Z0UvYcHMuLH2lM0AAvFm');
+{
+    "S51": [
+        {
+            "days": "mardi",
+            "from": "10:00",
+            "to": "16:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "10:30",
+            "to": "14:30"
+        }
+    ],
+    "S52": [
+        {
+            "days": "mardi",
+            "from": "09:30",
+            "to": "13:30"
+        },
+        {
+            "days": "jeudi",
+            "from": "11:30",
+            "to": "13:30"
+        }
+    ],
+    "S35": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S36": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S37": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S38": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S39": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S40": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S41": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S42": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S43": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S44": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S45": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S46": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S47": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S48": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S49": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S50": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S1": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S2": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S3": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S4": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S5": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S6": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S7": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S8": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S9": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S10": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S11": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S12": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S13": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S14": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S15": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S16": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S17": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S18": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S19": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S20": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S21": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S22": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S23": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S24": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S25": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S26": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "S27": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ],
+    "default": [
+        {
+            "days": "mercredi",
+            "from": "09:30",
+            "to": "14:00"
+        },
+        {
+            "days": "jeudi",
+            "from": "08:30",
+            "to": "13:00"
+        },
+        {
+            "days": "vendredi",
+            "from": "11:00",
+            "to": "16:00"
+        }
+    ]
+}
