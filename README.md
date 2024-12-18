@@ -25,7 +25,6 @@
     - Itération 1 : Configuration du projet Next.js
     - Itération 3 : [BDD] Ajouts des intervenants
 
-
 # .env
     AUTH_SECRET=your-secret-key
 

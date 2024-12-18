@@ -27,8 +27,8 @@ function AvailabilityIntoEvents(availability: any) {
 
   for (const weekStart of allWeeks) {
     const weekNumber = format(weekStart, 'I');
-    // Ne remplissez la semaine par défaut que si elle est manquante et que 'default' n'est pas null
-    if (!availability[`S${weekNumber}`] && availability.default !== null) {
+    // Ne remplissez la semaine par défaut que si elle est manquante et que 'default' n'est pas null et itérable
+    if (!availability[`S${weekNumber}`] && Array.isArray(availability.default)) {
       availability[`S${weekNumber}`] = [...availability.default]; // Créer une copie de 'default'
     }
   }
