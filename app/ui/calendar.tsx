@@ -13,9 +13,10 @@ import {
   PopoverTrigger,
 } from "@/app/ui/popover";
 import { XMarkIcon, TrashIcon } from '@/app/ui/icons';
+import { v4 as uuidv4 } from 'uuid'; // Importer uuid pour générer des identifiants uniques
 
 function AvailabilityIntoEvents(availability: any) {
-  let events: { title: string; start: string; end: string; url?: string; groupId?: string }[] = [];
+  let events: { id: string; title: string; start: string; end: string; url?: string; groupId?: string }[] = [];
   const JourSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 
   const Currentyear = new Date().getFullYear();
@@ -59,6 +60,7 @@ function AvailabilityIntoEvents(availability: any) {
           const startTime = addMinutes(start, from.getHours() * 60 + from.getMinutes());
           const endTime = addMinutes(start, to.getHours() * 60 + to.getMinutes());
           events.push({
+            id: uuidv4(), // Ajouter un identifiant unique
             title: 'Disponible',
             start: startTime.toISOString(),
             end: endTime.toISOString(),
@@ -169,7 +171,7 @@ export default function Calendar({ availability: initialAvailability, intervenan
     const eventToDelete = selectedEvent.event;
     const weekNumber = format(new Date(eventToDelete.start), 'I');
     const weekKey = `S${weekNumber}`;
-    const JourSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']; // Ajoutez cette ligne
+    const JourSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 
     const updatedAvailability = { ...availability };
     if (updatedAvailability[weekKey]) {
@@ -193,7 +195,8 @@ export default function Calendar({ availability: initialAvailability, intervenan
     try {
       await updateAvailabilityByKey(intervenantKey, updatedAvailability);
       setEvents(AvailabilityIntoEvents(updatedAvailability));
-      setAvailability(updatedAvailability); // Ajoutez cette ligne pour mettre à jour l'état
+      setAvailability(updatedAvailability);
+      eventToDelete.remove()
       handlePopoverClose();
     } catch (error) {
       console.error('Erreur lors de la suppression de la disponibilité', error);
@@ -204,6 +207,71 @@ export default function Calendar({ availability: initialAvailability, intervenan
     setIsPopoverOpen(false);
     setSelectedEvent(null);
   };
+
+  const handleEventChange = async (changeInfo: any) => {
+    const eventToChange = changeInfo.event;
+    const oldStart = new Date(changeInfo.oldEvent.start);
+    const oldEnd = new Date(changeInfo.oldEvent.end);
+    const newStart = new Date(eventToChange.start);
+    const newEnd = new Date(eventToChange.end);
+    const oldWeekNumber = format(oldStart, 'I');
+    const newWeekNumber = format(newStart, 'I');
+    const oldWeekKey = `S${oldWeekNumber}`;
+    const newWeekKey = `S${newWeekNumber}`;
+    const JourSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+  
+    const updatedAvailability = { ...availability };
+  
+    // Supprimer l'ancienne disponibilité
+    if (updatedAvailability[oldWeekKey]) {
+      updatedAvailability[oldWeekKey] = updatedAvailability[oldWeekKey].filter((slot: any) => {
+        const slotStart = parse(slot.from, 'HH:mm', new Date());
+        const slotEnd = parse(slot.to, 'HH:mm', new Date());
+        const slotDay = slot.days.split(', ').map((day: string) => JourSemaine.indexOf(day));
+        const oldEventDay = oldStart.getDay() - 1; // Convertir le jour de l'événement en index (0 pour lundi, 6 pour dimanche)
+        return !(slotStart.getHours() === oldStart.getHours() && slotStart.getMinutes() === oldStart.getMinutes() &&
+                 slotEnd.getHours() === oldEnd.getHours() && slotEnd.getMinutes() === oldEnd.getMinutes() &&
+                 slotDay.includes(oldEventDay));
+      });
+  
+      if (updatedAvailability[oldWeekKey].length === 0) {
+        delete updatedAvailability[oldWeekKey];
+      }
+    }
+  
+    // Ajouter la nouvelle disponibilité
+    const newDay = newStart.toLocaleDateString("fr-FR", { weekday: "long" });
+    const newFrom = newStart.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+    const newTo = newEnd.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+  
+    const newAvailability = {
+      days: newDay,
+      from: newFrom,
+      to: newTo
+    };
+  
+    if (!updatedAvailability[newWeekKey]) {
+      updatedAvailability[newWeekKey] = [];
+    }
+  
+    updatedAvailability[newWeekKey].push(newAvailability);
+  
+    // Enregistrer les nouvelles disponibilités dans la base de données
+    try {
+      await updateAvailabilityByKey(intervenantKey, updatedAvailability);
+  
+      // Mettre à jour l'état des disponibilités pour déclencher la mise à jour de l'affichage
+      setEvents(events.map(event => event.id === eventToChange.id ? { ...event, start: newStart.toISOString(), end: newEnd.toISOString() } : event));
+      setAvailability(updatedAvailability);
+      
+      // Réinitialiser la sélection pour éviter une sélection par défaut
+      setSelectedEvent(null); // Annule la sélection de l'événement
+      setIsPopoverOpen(false); // Ferme le popover si ouvert
+      
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des disponibilités', error);
+    }
+  };  
 
   return (
     <>
@@ -247,6 +315,7 @@ export default function Calendar({ availability: initialAvailability, intervenan
         }}
         select={handleSelect}
         eventClick={handleEventClick}
+        eventChange={handleEventChange} // Ajoutez cette ligne pour gérer les modifications d'événements
       />
       {selectedEvent && selectedEvent.el && (
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
