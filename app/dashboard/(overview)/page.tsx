@@ -7,9 +7,7 @@ import { IntervenantsTableSkeleton } from '@/app/ui/skeletons';
 import Search from '@/app/ui/search';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { UserPlusIcon } from '@/app/ui/icons';
 import { CreateIntervenants, RegenerateAllKeys, ExportAvailability, ImportWorkloads } from '@/app/ui/intervenants/buttons';
-import { fetchTotalPages } from '@/app/lib/data';
 
 export default function Gestion() {
     const [totalPages, setTotalPages] = useState(1);
@@ -19,9 +17,11 @@ export default function Gestion() {
     const currentPage = Number(searchParams.get('page')) || 1;
 
     const refreshData = async () => {
-        const result = await fetchTotalPages(query);
+        // Fetch the total number of pages from the API or calculate it based on the data
+        const response = await fetch(`/api/intervenants/totalPages?query=${query}`);
+        const result = await response.json();
         setTotalPages(result.totalPages);
-        setRefreshKey(prevKey => prevKey + 1);
+        setRefreshKey(prevKey => prevKey + 1); // Increment refresh key to force re-render
     };
 
     useEffect(() => {

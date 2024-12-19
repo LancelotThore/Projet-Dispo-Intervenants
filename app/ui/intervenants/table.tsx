@@ -5,7 +5,6 @@ import { formatDateToLocal } from '@/app/lib/utils';
 import { NewKeyIntervenants, UpdateIntervenants, DeleteIntervenants } from '@/app/ui/intervenants/buttons';
 import { CheckCircleIcon, ExclamationCircleIcon, KeyIcon } from '@/app/ui/icons';
 import { Intervenants } from '@/app/lib/definitions';
-import { fetchIntervenants } from '@/app/lib/data';
 
 export default function Table({ query, currentPage, itemsPerPage }: { query: string; currentPage: number; itemsPerPage: number }) {
     const [intervenants, setIntervenants] = useState<Intervenants[]>([]);
@@ -13,7 +12,8 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await fetchIntervenants(query, currentPage, itemsPerPage);
+            const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}&limit=${itemsPerPage}`);
+            const result = await response.json();
             if (Array.isArray(result)) {
                 setIntervenants(result);
             } else {
@@ -25,7 +25,8 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
     }, [query, currentPage, itemsPerPage]);
 
     const refreshData = async () => {
-        const result = await fetchIntervenants(query, currentPage, itemsPerPage);
+        const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}&limit=${itemsPerPage}`);
+        const result = await response.json();
         setIntervenants(result);
     };
 
@@ -36,7 +37,7 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
     return (
         <div className="mt-6 flow-root overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
-                <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+                <div className="rounded-lg bg-red-50 p-2 lg:pt-0">
                     <div className="lg:hidden">
                         {intervenants.map((intervenant) => (
                             <div
