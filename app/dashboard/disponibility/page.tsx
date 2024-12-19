@@ -50,7 +50,7 @@ export default function Disponibility() {
         <option value="">Sélectionnez un intervenant</option>
         {intervenants.map(intervenant => (
           <option key={intervenant.key} value={intervenant.key}>
-            {intervenant.lastname} {intervenant.firstname}
+            {intervenant.firstname} {intervenant.lastname}
           </option>
         ))}
       </select>

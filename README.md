@@ -7,6 +7,7 @@
     - Itération 18 : Export JSON
     - Itération 19 : Upgrade : la date
     - Itération 20 : Les semaines à saisir - upgrade BDD
+    - Itération 21 : Import
 
 ## 13/12/2024
     - Itération 10 : Protection de l'accès au dashboard d’administration

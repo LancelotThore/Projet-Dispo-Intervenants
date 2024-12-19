@@ -1,6 +1,6 @@
 import { KeyIcon, PencilIcon, UserPlusIcon, TrashIcon, ArrowPathIcon, CloudArrowDownIcon, CloudArrowUpIcon } from '@/app/ui/icons';
 import Link from 'next/link';
-import { deleteIntervenants, createIntervenants, newKeyIntervenants, regenerateAllKeys, exportIntervenantsAvailability } from '@/app/lib/actions';
+import { deleteIntervenants, createIntervenants, newKeyIntervenants, regenerateAllKeys, exportIntervenantsAvailability, importWorkloads } from '@/app/lib/actions';
 
 export function CreateIntervenants() {
   return (
