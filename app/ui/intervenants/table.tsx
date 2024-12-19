@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { formatDateToLocal } from '@/app/lib/utils';
 import { NewKeyIntervenants, UpdateIntervenants, DeleteIntervenants } from '@/app/ui/intervenants/buttons';
-import { CheckCircleIcon, ExclamationCircleIcon } from '@/app/ui/icons';
+import { CheckCircleIcon, ExclamationCircleIcon, KeyIcon } from '@/app/ui/icons';
 import { Intervenants } from '@/app/lib/definitions';
 
 export default function Table({ query, currentPage, itemsPerPage }: { query: string; currentPage: number; itemsPerPage: number }) {
@@ -35,10 +35,10 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
     }
 
     return (
-        <div className="mt-6 flow-root">
+        <div className="mt-6 flow-root overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
                 <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-                    <div className="md:hidden">
+                    <div className="lg:hidden">
                         {intervenants.map((intervenant) => (
                             <div
                                 key={intervenant.id}
@@ -53,11 +53,12 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
                                 </div>
                                 <div className="flex w-full items-center justify-between pt-4">
                                     <div>
-                                        <p>{intervenant.key}</p>
-                                        <p>{formatDateToLocal(intervenant.creationdate)}</p>
-                                        <p>{formatDateToLocal(intervenant.enddate)}</p>
+                                        <div className="flex gap-2"><KeyIcon className="w-4 text-gray-500"/><span>{intervenant.key}</span></div>
+                                        <p><span className="text-sm text-gray-500">Creation:</span> {formatDateToLocal(intervenant.creationdate)}</p>
+                                        <p><span className="text-sm text-gray-500">End Date:</span> {formatDateToLocal(intervenant.enddate)}</p>
+                                        <p><span className="text-sm text-gray-500">Last Updated:</span> {formatDateToLocal(intervenant.last_modified)}</p>
                                     </div>
-                                    <div className='flex gap-2'>
+                                    <div className='flex flex-col gap-2'>
                                         <NewKeyIntervenants id={intervenant.id} onRegenerate={refreshData} />
                                         <UpdateIntervenants id={intervenant.id} />
                                         <DeleteIntervenants id={intervenant.id} onDelete={refreshData} />
@@ -66,31 +67,32 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
                             </div>
                         ))}
                     </div>
-                    <table className="hidden min-w-full text-gray-900 md:table">
+                    <table className="hidden min-w-full text-gray-900 lg:table">
                         <thead className="rounded-lg text-left text-sm font-normal">
                             <tr>
-                                <th scope="col" className="px-3 py-5 font-medium">
-                                    
-                                </th>
-                                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                                <th scope="col" className="px-3 py-5 font-medium whitespace-nowrap"></th>
+                                <th scope="col" className="px-4 py-5 font-medium sm:pl-6 whitespace-nowrap">
                                     Firstname
                                 </th>
-                                <th scope="col" className="px-3 py-5 font-medium">
+                                <th scope="col" className="px-3 py-5 font-medium whitespace-nowrap">
                                     Lastname
                                 </th>
-                                <th scope="col" className="px-3 py-5 font-medium">
+                                <th scope="col" className="px-3 py-5 font-medium whitespace-nowrap">
                                     Email
                                 </th>
-                                <th scope="col" className="px-3 py-5 font-medium">
+                                <th scope="col" className="px-3 py-5 font-medium whitespace-nowrap">
                                     Key
                                 </th>
-                                <th scope="col" className="px-3 py-5 font-medium">
+                                <th scope="col" className="px-3 py-5 font-medium whitespace-nowrap">
                                     Creation Date
                                 </th>
-                                <th scope="col" className="px-3 py-5 font-medium">
+                                <th scope="col" className="px-3 py-5 font-medium whitespace-nowrap">
                                     End Date
                                 </th>
-                                <th scope="col" className="relative py-3 pl-6 pr-3">
+                                <th scope="col" className="px-3 py-5 font-medium whitespace-nowrap">
+                                    Last Update
+                                </th>
+                                <th scope="col" className="relative py-3 pl-6 pr-3 whitespace-nowrap">
                                     <span className="sr-only">Edit</span>
                                 </th>
                             </tr>
@@ -121,6 +123,9 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3">
                                         {formatDateToLocal(intervenant.enddate)}
+                                    </td>
+                                    <td className="whitespace-nowrap px-3 py-3">
+                                        {formatDateToLocal(intervenant.last_modified)}
                                     </td>
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         <div className="flex justify-end gap-3">

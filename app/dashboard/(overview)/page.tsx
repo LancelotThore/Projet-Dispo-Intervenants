@@ -8,7 +8,7 @@ import Search from '@/app/ui/search';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { UserPlusIcon } from '@/app/ui/icons';
-import { CreateIntervenants, RegenerateAllKeys, ExportAvailability } from '@/app/ui/intervenants/buttons';
+import { CreateIntervenants, RegenerateAllKeys, ExportAvailability, ImportWorkloads } from '@/app/ui/intervenants/buttons';
 
 export default function Gestion() {
     const [totalPages, setTotalPages] = useState(1);
@@ -31,11 +31,16 @@ export default function Gestion() {
     return (
         <main className="flex min-h-screen flex-col p-6">
             <h1>Gestion des Intervenants :</h1>
-            <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-                <Search placeholder="Rechercher des intervenants" />
-                <CreateIntervenants />
-                <RegenerateAllKeys onRegenerate={refreshData} />
-                <ExportAvailability />
+            <div className="mt-4 flex flex-col items-center justify-between gap-2 md:mt-8 w-full">
+                <div className="flex items-center gap-2 w-full">
+                    <Search placeholder="Rechercher des intervenants" />
+                    <CreateIntervenants />
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                    <RegenerateAllKeys onRegenerate={refreshData} />
+                    <ExportAvailability />
+                    <ImportWorkloads onImport={refreshData} />
+                </div>
             </div>
             <Suspense fallback={<IntervenantsTableSkeleton />}>
                 <Table key={refreshKey} query={query} currentPage={currentPage} itemsPerPage={10} />

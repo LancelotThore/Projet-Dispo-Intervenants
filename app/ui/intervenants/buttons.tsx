@@ -1,4 +1,4 @@
-import { KeyIcon, PencilIcon, PlusIcon, TrashIcon, ArrowPathIcon, DownloadIcon } from '@/app/ui/icons';
+import { KeyIcon, PencilIcon, UserPlusIcon, TrashIcon, ArrowPathIcon, CloudArrowDownIcon, CloudArrowUpIcon } from '@/app/ui/icons';
 import Link from 'next/link';
 import { deleteIntervenants, createIntervenants, newKeyIntervenants, regenerateAllKeys, exportIntervenantsAvailability } from '@/app/lib/actions';
 
@@ -6,10 +6,10 @@ export function CreateIntervenants() {
   return (
     <Link
       href="/dashboard/create"
-      className="flex h-10 items-center rounded-lg bg-redunilim px-4 text-sm font-medium text-white transition-colors hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+      className="flex h-10 items-center rounded-lg bg-redunilim px-4 text-sm font-medium text-white transition-colors hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 gap-2 whitespace-nowrap"
     >
-      <span className="hidden md:block">Create Intervenants</span>{' '}
-      <PlusIcon className="h-5 md:ml-4" />
+      <span className="hidden sm:block">Create Intervenants</span>
+      <UserPlusIcon className="h-5 md:ml-4" />
     </Link>
   );
 }
@@ -78,9 +78,33 @@ export function ExportAvailability() {
   };
 
   return (
-    <button onClick={handleExport} className="flex items-center gap-2 rounded-md border p-2 hover:bg-gray-100">
-      <DownloadIcon className="w-5" />
+    <button onClick={handleExport} className="flex items-center gap-2 rounded-md border p-2 hover:bg-gray-100 whitespace-nowrap">
+      <CloudArrowDownIcon className="w-5" />
       <span>Export</span>
     </button>
+  );
+}
+
+export function ImportWorkloads({ onImport }: { onImport: () => void }) {
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const text = e.target?.result as string;
+        const workloads = JSON.parse(text);
+        await importWorkloads(workloads);
+        onImport();
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  return (
+    <label className="flex items-center gap-2 rounded-md border p-2 hover:bg-gray-100 cursor-pointer whitespace-nowrap">
+      <CloudArrowUpIcon className="w-5" />
+      <span>Import</span>
+      <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+    </label>
   );
 }

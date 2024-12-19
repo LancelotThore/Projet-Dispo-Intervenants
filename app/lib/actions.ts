@@ -295,3 +295,22 @@ export async function exportIntervenantsAvailability() {
     client.release();
   }
 }
+
+export async function importWorkloads(workloads: { intervenant: string, workweek: { week: number, hours: number }[] }[]) {
+  const client = await db.connect();
+  try {
+    for (const workload of workloads) {
+      const { intervenant, workweek } = workload;
+      const workweekJson = JSON.stringify(workweek);
+      await client.query(
+        'UPDATE intervenants SET workweek = $1 WHERE email = $2',
+        [workweekJson, intervenant]
+      );
+    }
+  } catch (err) {
+    console.error('Erreur lors de l\'importation des workloads', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
