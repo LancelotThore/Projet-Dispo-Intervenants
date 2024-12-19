@@ -5,6 +5,7 @@ import { formatDateToLocal } from '@/app/lib/utils';
 import { NewKeyIntervenants, UpdateIntervenants, DeleteIntervenants } from '@/app/ui/intervenants/buttons';
 import { CheckCircleIcon, ExclamationCircleIcon, KeyIcon } from '@/app/ui/icons';
 import { Intervenants } from '@/app/lib/definitions';
+import { fetchIntervenants } from '@/app/lib/data';
 
 export default function Table({ query, currentPage, itemsPerPage }: { query: string; currentPage: number; itemsPerPage: number }) {
     const [intervenants, setIntervenants] = useState<Intervenants[]>([]);
@@ -12,8 +13,7 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}&limit=${itemsPerPage}`);
-            const result = await response.json();
+            const result = await fetchIntervenants(query, currentPage, itemsPerPage);
             if (Array.isArray(result)) {
                 setIntervenants(result);
             } else {
@@ -25,8 +25,7 @@ export default function Table({ query, currentPage, itemsPerPage }: { query: str
     }, [query, currentPage, itemsPerPage]);
 
     const refreshData = async () => {
-        const response = await fetch(`/api/intervenants/get?query=${query}&page=${currentPage}&limit=${itemsPerPage}`);
-        const result = await response.json();
+        const result = await fetchIntervenants(query, currentPage, itemsPerPage);
         setIntervenants(result);
     };
 
