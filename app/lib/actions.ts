@@ -16,7 +16,7 @@ export type State = {
   message?: string | null;
 };
 
-const validateFields = (fields: { email: any; firstname: any; lastname: any }) => {
+const validateFields = (fields: { email: string | FormDataEntryValue | null; firstname: string | FormDataEntryValue | null; lastname: string | FormDataEntryValue | null }) => {
   const errors: State['errors'] = {};
 
   if (!fields.email) {
@@ -210,7 +210,7 @@ export async function authenticate(
   }
 }
 
-export async function updateAvailabilityByKey(key: string, newAvailability: Record<string, any>) {
+export async function updateAvailabilityByKey(key: string, newAvailability: Record<string, { start_time: string; end_time: string }[]>) {
   const client = await db.connect();
   try {
     const availabilityJson = JSON.stringify(newAvailability); // Convertir en JSON
@@ -233,7 +233,7 @@ export async function updateAvailabilityByKey(key: string, newAvailability: Reco
   }
 }
 
-export async function checkAvailabilityAndWorkweek(key: string) {
+export async function checkAvailabilityAndWorkweek(key: string): Promise<{ missingWeeks: string[], insufficientHours: { week: string, totalHours: number, requiredHours: number }[] }> {
   const client = await db.connect();
   try {
     const result = await client.query(
@@ -255,8 +255,10 @@ export async function checkAvailabilityAndWorkweek(key: string) {
         if (!weekAvailability) {
           missingWeeks.push(week);
         } else {
-          const totalHours = weekAvailability.reduce((sum, slot) => sum + (new Date(slot.end_time) - new Date(slot.start_time)) / 3600000, 0);
-          if (totalHours < requiredHours) {
+          const totalHours = weekAvailability.reduce((sum: number, slot: { start_time: string, end_time: string }) => {
+            return sum + (new Date(slot.end_time).getTime() - new Date(slot.start_time).getTime()) / 3600000;
+          }, 0);
+          if (typeof requiredHours === 'number' && totalHours < requiredHours) {
             insufficientHours.push({ week, totalHours, requiredHours });
           }
         }
@@ -272,14 +274,23 @@ export async function checkAvailabilityAndWorkweek(key: string) {
   }
 }
 
+
 export async function exportIntervenantsAvailability() {
   const client = await db.connect();
   try {
-    const result = await client.query('SELECT * FROM intervenants ORDER BY lastname');
-    const data = result.rows.reduce((acc, row) => {
-      acc[row.email] = row.availability;
-      return acc;
-    }, {});
+    const result = await client.query('SELECT * FROM intervenants');
+    const data = result.rows.map((row) => ({
+      id: row.id,
+      email: row.email,
+      firstname: row.firstname,
+      lastname: row.lastname,
+      key: row.key,
+      creationdate: row.creationdate,
+      enddate: row.enddate,
+      availability: row.availability,
+      workweek: row.workweek,
+      last_modified: row.last_modified ? new Date(row.last_modified).toLocaleString("fr-FR", { timeZone: "Europe/Paris" }) : null,
+    }));
     const exportDate = new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" });
     const exportData = {
       export_date: exportDate,

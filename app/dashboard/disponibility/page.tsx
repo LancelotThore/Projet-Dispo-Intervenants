@@ -5,11 +5,20 @@ import { fetchIntervenantsKey } from '@/app/lib/data';
 import { checkAvailabilityAndWorkweek } from '@/app/lib/actions';
 import Calendar from '@/app/ui/calendar';
 
+// Définir un type pour les intervenants
+interface Intervenant {
+  key: string;
+  firstname: string;
+  lastname: string;
+  last_modified?: string;
+  availability?: Record<string, { start_time: string; end_time: string }[]>; // Type pour availability
+}
+
 export default function Disponibility() {
-  const [intervenants, setIntervenants] = useState([]);
-  const [selectedIntervenant, setSelectedIntervenant] = useState(null);
-  const [missingWeeks, setMissingWeeks] = useState([]);
-  const [insufficientHours, setInsufficientHours] = useState([]);
+  const [intervenants, setIntervenants] = useState<Intervenant[]>([]);
+  const [selectedIntervenant, setSelectedIntervenant] = useState<Intervenant | null>(null);
+  const [missingWeeks, setMissingWeeks] = useState<string[]>([]);
+  const [insufficientHours, setInsufficientHours] = useState<{ week: string; totalHours: number; requiredHours: number }[]>([]);
 
   useEffect(() => {
     async function loadIntervenants() {
@@ -23,9 +32,9 @@ export default function Disponibility() {
     loadIntervenants();
   }, []);
 
-  const handleSelectChange = async (event) => {
+  const handleSelectChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedKey = event.target.value;
-    const intervenant = intervenants.find(i => i.key === selectedKey);
+    const intervenant = intervenants.find(i => i.key === selectedKey) || null;
     setSelectedIntervenant(intervenant);
 
     if (intervenant) {
@@ -37,6 +46,18 @@ export default function Disponibility() {
         console.error('Erreur lors de la vérification des disponibilités et des heures de travail', err);
       }
     }
+  };
+
+  // Fonction pour transformer l'availability dans le bon format
+  const formatAvailability = (availability: Record<string, { start_time: string; end_time: string }[]>): Record<string, { days: string; from: string; to: string }[]> => {
+    return Object.keys(availability).reduce((acc, day) => {
+      acc[day] = availability[day].map(timeSlot => ({
+        days: day,  // Jour de la semaine
+        from: timeSlot.start_time,  // Heure de début
+        to: timeSlot.end_time  // Heure de fin
+      }));
+      return acc;
+    }, {} as Record<string, { days: string; from: string; to: string }[]>);
   };
 
   return (
@@ -54,9 +75,12 @@ export default function Disponibility() {
           </option>
         ))}
       </select>
+
       {selectedIntervenant && (
         <>
-          <h1 className="text-center text-4xl mb-8">Disponibilités de {selectedIntervenant.firstname} {selectedIntervenant.lastname}</h1>
+          <h1 className="text-center text-4xl mb-8">
+            Disponibilités de {selectedIntervenant.firstname} {selectedIntervenant.lastname}
+          </h1>
           {selectedIntervenant.last_modified && (
             <div className="text-center text-gray-600 mb-4">
               Dernière modification: {new Date(selectedIntervenant.last_modified).toLocaleString("fr-FR", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Paris" })}
@@ -65,13 +89,13 @@ export default function Disponibility() {
           {missingWeeks.length > 0 && (
             <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
               <strong className="font-bold">Attention!</strong>
-              <span className="block sm:inline"> Les disponibilités pour les semaines: {missingWeeks.join(', ')}. sont manquantes</span>
+              <span className="block sm:inline"> Les disponibilités pour les semaines: {missingWeeks.join(', ')} sont manquantes</span>
             </div>
           )}
           {insufficientHours.length > 0 && (
             <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
               <strong className="font-bold">Attention!</strong>
-              <span className="block sm:inline"> Vous avez saisi moins d'heures que nécessaire pour les semaines suivantes:</span>
+              <span className="block sm:inline"> Vous avez saisi moins d&apos;heures que nécessaire pour les semaines suivantes:</span>
               <ul className="list-disc list-inside">
                 {insufficientHours.map(({ week, totalHours, requiredHours }) => (
                   <li key={week}>Semaine {week}: {totalHours} heures saisies, {requiredHours} heures requises</li>
@@ -79,7 +103,11 @@ export default function Disponibility() {
               </ul>
             </div>
           )}
-          <Calendar key={selectedIntervenant.key} availability={selectedIntervenant.availability ?? ''} intervenantKey={selectedIntervenant.key} />
+          <Calendar
+            key={selectedIntervenant.key}
+            availability={selectedIntervenant.availability ? formatAvailability(selectedIntervenant.availability) : {}}
+            intervenantKey={selectedIntervenant.key}
+          />
         </>
       )}
     </div>

@@ -5,25 +5,18 @@ import { fetchIntervenantByKey } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Calendar from '@/app/ui/calendar';
 import { checkAvailabilityAndWorkweek } from '@/app/lib/actions';
-import { useRouter } from 'next/router';
+import { Intervenants } from '@/app/lib/definitions';
 
-interface AvailabilitySlot {
-  start_time: string;
-  end_time: string;
+// Correct the type for params
+interface AvailabilityPageProps {
+  params: {
+    key: string;
+  };
 }
 
-interface Intervenant {
-  availability: Record<string, AvailabilitySlot[]>;  // Définir le type de `availability`
-  firstname: string;
-  lastname: string;
-  last_modified?: string;
-  key: string;
-}
-
-const AvailabilityPage: React.FC = () => {
-  const router = useRouter();
-  const { key } = router.query; // Récupérer le paramètre key avec useRouter
-  const [intervenant, setIntervenant] = useState<Intervenant | null>(null);
+const AvailabilityPage: React.FC<AvailabilityPageProps> = ({ params }) => {
+  const { key } = params;
+  const [intervenant, setIntervenant] = useState<Intervenants | null>(null);
   const [missingWeeks, setMissingWeeks] = useState<string[]>([]);
   const [insufficientHours, setInsufficientHours] = useState<{ week: string; totalHours: number; requiredHours: number }[]>([]);
   const [message, setMessage] = useState<string>('');
@@ -31,16 +24,16 @@ const AvailabilityPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!key || typeof key !== 'string') {
-        return; // Ne pas continuer si key est invalide
+        notFound();
       }
 
-      const { valid, intervenant, message = '' } = await fetchIntervenantByKey(key); // Définir message comme une chaîne vide par défaut
+      const { valid, intervenant, message } = await fetchIntervenantByKey(key);
 
       if (!valid) {
         if (message === 'Clé inconnue') {
           notFound();
         }
-        setMessage(message); // Message sera toujours une chaîne de caractères
+        setMessage(message);
         return;
       }
 
@@ -50,15 +43,8 @@ const AvailabilityPage: React.FC = () => {
       setInsufficientHours(insufficientHours);
     };
 
-    if (key) {
-      fetchData();
-    }
+    fetchData();
   }, [key]);
-
-  if (!key) {
-    // Optionnel : gérer lorsque key n'est pas encore disponible (avant que le routage soit terminé)
-    return <div>Chargement...</div>;
-  }
 
   if (message) {
     return <div>{message}</div>;
@@ -67,16 +53,6 @@ const AvailabilityPage: React.FC = () => {
   if (!intervenant) {
     return <div>Chargement...</div>;
   }
-
-  // Transformation de la disponibilité dans le format attendu par le composant Calendar
-  const formattedAvailability = Object.keys(intervenant.availability || {}).reduce((acc, day) => {
-    acc[day] = intervenant.availability[day].map(timeSlot => ({
-      days: day,  // jour de la semaine
-      from: timeSlot.start_time,  // heure de début
-      to: timeSlot.end_time  // heure de fin
-    }));
-    return acc;
-  }, {} as Record<string, { days: string; from: string; to: string }[]>);
 
   return (
     <main className="container m-auto my-8">     
@@ -103,7 +79,7 @@ const AvailabilityPage: React.FC = () => {
             </ul>
           </div>
         )}
-        <Calendar availability={formattedAvailability} intervenantKey={intervenant.key} />
+        <Calendar availability={intervenant.availability ?? ''} intervenantKey={intervenant.key} />
     </main>
   );
 };
