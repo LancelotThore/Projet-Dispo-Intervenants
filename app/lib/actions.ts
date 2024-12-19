@@ -277,19 +277,11 @@ export async function checkAvailabilityAndWorkweek(key: string) {
 export async function exportIntervenantsAvailability() {
   const client = await db.connect();
   try {
-    const result = await client.query('SELECT * FROM intervenants');
-    const data = result.rows.map((row) => ({
-      id: row.id,
-      email: row.email,
-      firstname: row.firstname,
-      lastname: row.lastname,
-      key: row.key,
-      creationdate: row.creationdate,
-      enddate: row.enddate,
-      availability: row.availability,
-      workweek: row.workweek,
-      last_modified: row.last_modified ? new Date(row.last_modified).toLocaleString("fr-FR", { timeZone: "Europe/Paris" }) : null,
-    }));
+    const result = await client.query('SELECT * FROM intervenants ORDER BY lastname');
+    const data = result.rows.reduce((acc, row) => {
+      acc[row.email] = row.availability;
+      return acc;
+    }, {});
     const exportDate = new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" });
     const exportData = {
       export_date: exportDate,
