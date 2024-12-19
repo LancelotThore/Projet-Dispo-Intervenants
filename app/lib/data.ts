@@ -1,5 +1,5 @@
+"use server";
 import db from '@/app/lib/db';
-import bcrypt from 'bcrypt';
 
 // Fonction pour récupérer les intervenants avec pagination
 export async function fetchIntervenants(query: string, page: number, limit: number) {
@@ -10,6 +10,19 @@ export async function fetchIntervenants(query: string, page: number, limit: numb
       'SELECT * FROM intervenants WHERE email ILIKE $1 OR firstname ILIKE $1 OR lastname ILIKE $1 ORDER BY lastname, firstname LIMIT $2 OFFSET $3',
       [`%${query}%`, limit, offset]
     );
+    return result.rows;
+  } catch (err) {
+    console.error('Erreur lors de la récupération des intervenants', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function fetchIntervenantsKey() {
+  const client = await db.connect();
+  try {
+    const result = await client.query('SELECT firstname, lastname, key, availability, last_modified FROM intervenants ORDER BY lastname');
     return result.rows;
   } catch (err) {
     console.error('Erreur lors de la récupération des intervenants', err);

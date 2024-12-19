@@ -3,6 +3,7 @@
     - Itération 14 : Supprimer une disponibilité
     - Itération 15 : Edition d’une disponibilité
     - Itération 16 : Disponibilités par défaut
+    - Itération 17 : Gestion des disponibilités des intervenants par l’administrateur
     - Itération 18 : Export JSON
     - Itération 19 : Upgrade : la date
     - Itération 20 : Les semaines à saisir - upgrade BDD
