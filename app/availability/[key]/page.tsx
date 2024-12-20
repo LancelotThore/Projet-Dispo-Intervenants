@@ -25,9 +25,8 @@ const AvailabilityPage = async ({ params }: { params: { key: string } }) => {
     <main className="container m-auto my-8">     
         <h1 className="text-center text-4xl mb-8">Disponibilités de {intervenant.firstname} {intervenant.lastname}</h1>
         {intervenant.last_modified && (
-          <div className="text-center text-gray-600 mb-4">
-            Dernière modification: {new Date(intervenant.last_modified).toLocaleString("fr-FR", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Paris" })}
-          </div>
+          <p className="text-center text-gray-600 mb-4">Dernière modification: <strong>{new Date(intervenant.last_modified).toLocaleDateString("fr-FR", { dateStyle: "full", timeZone: "Europe/Paris" })}</strong>
+        </p>
         )}
         {missingWeeks.length > 0 && (
           <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">

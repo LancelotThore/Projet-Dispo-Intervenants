@@ -6,6 +6,7 @@ import db from '@/app/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+import { parse } from 'date-fns';
 
 export type State = {
   errors?: {
@@ -236,11 +237,7 @@ export async function updateAvailabilityByKey(key: string, newAvailability: Reco
 export async function checkAvailabilityAndWorkweek(key: string) {
   const client = await db.connect();
   try {
-    const result = await client.query(
-      'SELECT availability, workweek FROM intervenants WHERE key = $1',
-      [key]
-    );
-
+    const result = await client.query('SELECT availability, workweek FROM intervenants WHERE key = $1', [key]);
     if (result.rows.length === 0) {
       throw new Error('Intervenant non trouvé');
     }
@@ -249,16 +246,23 @@ export async function checkAvailabilityAndWorkweek(key: string) {
     const missingWeeks = [];
     const insufficientHours = [];
 
-    if (workweek) {
-      for (const [week, requiredHours] of Object.entries(workweek)) {
-        const weekAvailability = availability[week];
-        if (!weekAvailability) {
-          missingWeeks.push(week);
-        } else {
-          const totalHours = weekAvailability.reduce((sum, slot) => sum + (new Date(slot.end_time) - new Date(slot.start_time)) / 3600000, 0);
-          if (totalHours < requiredHours) {
-            insufficientHours.push({ week, totalHours, requiredHours });
-          }
+    for (const [week, requiredHours] of Object.entries(workweek)) {
+      let weekAvailability = availability[week];
+      if (!weekAvailability && availability.default) {
+        weekAvailability = availability.default;
+      }
+
+      if (!weekAvailability) {
+        missingWeeks.push(week);
+      } else {
+        const totalHours = weekAvailability.reduce((sum: number, slot: { from: string, to: string }) => {
+          const from = parse(slot.from, 'HH:mm', new Date());
+          const to = parse(slot.to, 'HH:mm', new Date());
+          return sum + (to.getTime() - from.getTime()) / (1000 * 60 * 60);
+        }, 0);
+
+        if (totalHours < requiredHours) {
+          insufficientHours.push({ week, totalHours, requiredHours });
         }
       }
     }
