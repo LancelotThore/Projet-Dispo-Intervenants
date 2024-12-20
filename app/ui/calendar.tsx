@@ -5,7 +5,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useEffect, useState, useRef } from 'react';
-import { startOfYear, eachWeekOfInterval, format, parse, addDays, startOfWeek, addMinutes } from 'date-fns';
+import { eachWeekOfInterval, format, parse, addDays, startOfWeek, addMinutes } from 'date-fns';
 import { Button } from '@/app/ui/button';
 import { updateAvailabilityByKey } from '@/app/lib/actions';
 import {
