@@ -35,3 +35,46 @@
 
 # Generate key
     openssl rand -base64 32
+
+# Format pour import à mettre dans un fichier json
+    [
+        {
+            "intervenant": "marc.tanguy@unilim.fr",
+            "workweek": {
+                "S37": 4,
+                "S38": 8,
+                "S39": 12,
+                "S40": 16,
+                "S41": 2,
+                "S4": 5,
+                "S5": 8,
+                "S8": 12
+            }
+        },
+        {
+            "intervenant": "yannick.boudon@unilim.fr",
+            "workweek": {
+                "S37": 4,
+                "S38": 8,
+                "S49": 12,
+                "S40": 16,
+                "S41": 2,
+                "S42": 5,
+                "S5": 8,
+                "S6": 12
+            }
+        },
+        {
+            "intervenant": "test@test",
+            "workweek": {
+                "S37": 4,
+                "S38": 8,
+                "S39": 12,
+                "S40": 16,
+                "S41": 2,
+                "S4": 5,
+                "S5": 8,
+                "S6": 12
+            }
+        }
+    ]
