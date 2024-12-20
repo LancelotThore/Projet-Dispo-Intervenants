@@ -25,6 +25,15 @@ export default function Page() {
             <span>Log in</span> <ArrowRightIcon className="w-6 md:w-7" />
           </Link>
         </div>
+        <div className="flex items-center justify-center">
+          <Image
+            src="/iut-image.jpg"
+            width={1000}
+            height={760}
+            className="rounded-lg width-full object-contained"
+            alt="Screenshots of the dashboard project showing desktop version"
+          />
+        </div>
       </div>
     </main>
   );
