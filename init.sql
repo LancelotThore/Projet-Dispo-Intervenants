@@ -40,3 +40,6 @@ INSERT INTO intervenants (email, firstname, lastname, key, creationdate, enddate
 ('chris.meyer@unilim.fr', 'Chris', 'Meyer', 'chris-key', '2024-07-20', '2025-07-20', '{}', '{}'),  -- Valide
 ('aline.girard@unilim.fr', 'Aline', 'Girard', 'aline-key', '2024-09-30', '2025-09-30', '{}', '{}'),  -- Valide
 ('george.martinez@unilim.fr', 'George', 'Martinez', 'george-key', '2023-07-18', '2024-07-18', '{}', '{}');  -- Expiré
+
+INSERT INTO users (firstname, lastname, email, password) 
+VALUES ( 'Username', 'Userlastname', 'user@example.com', '$2b$10$wciirz73qduyU9NY57uw7ugHjUQH.flZ6Z0UvYcHMuLH2lM0AAvFm');

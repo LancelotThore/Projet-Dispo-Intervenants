@@ -24,14 +24,15 @@ services:
     image: postgres
     container_name: postgres_container
     restart: always
-    volumes:
-      - db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: app_db_user
       POSTGRES_DB: app_db
       POSTGRES_PASSWORD: app_db__user_password
     ports:
       - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
     networks:
       - app_network
     healthcheck:
