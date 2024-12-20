@@ -32,6 +32,7 @@ export default function Page() {
             height={760}
             className="rounded-lg width-full object-contained"
             alt="Screenshots of the dashboard project showing desktop version"
+            priority
           />
         </div>
       </div>
